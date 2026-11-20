@@ -30,7 +30,7 @@ We will report accuracy, Expected Calibration Error (ECE), negative log-likeliho
 | Name | GitHub Username |
 |---|---|
 | Sosna Worku Achamyeleh | [@sossyh](https://github.com/sossyh) |
-| Sinchana Manjula Prabhakara | [@SINCHANA_USERNAME](https://github.com/SINCHANA_USERNAME) |
+| Sinchana Manjula Prabhakara | [@sinchanaprabhakar](https://github.com/sinchanaprabhakar) |
 
 ## Datasets
 
