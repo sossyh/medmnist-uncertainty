@@ -1,31 +1,34 @@
 # Knowing When the Model Doesn't Know
+### Uncertainty Estimation for Medical Image Classification
 
-**Uncertainty Estimation for Medical Image Classification**
-
-Final project for CSCI 6366: Neural Networks and Deep Learning, The George Washington University.
+Final project for **CSCI 6366: Neural Networks and Deep Learning**, The George Washington University.
 
 ## Project Summary
 
-Deep neural networks often give highly confident predictions even when they are wrong, or when an input looks nothing like their training data. In medical imaging, a model that is confidently wrong is dangerous, while a model that can say "I am not sure" and refer the case to a clinician is much safer.
+Deep neural networks can produce highly confident predictions even when their predictions are incorrect or when they encounter inputs that differ significantly from their training data. In medical imaging, such overconfidence can be particularly dangerous. A model that confidently produces an incorrect diagnosis may pose a risk, whereas a model capable of recognizing its uncertainty and referring the case to a clinician provides a safer approach.
 
-This project asks: **which deep learning techniques let a network recognize when it should not be trusted?**
+This project investigates the following research question:
 
-We train a small convolutional neural network (CNN) on chest X-rays (normal vs. pneumonia) and compare four ways of estimating how confident the model really is:
+**Which deep learning techniques enable a neural network to recognize when its predictions should not be trusted?**
 
-1. **Softmax baseline:** the model's raw maximum probability.
-2. **Monte Carlo (MC) Dropout:** dropout stays on at test time, each image is run many times, and the spread of the predictions measures uncertainty.
-3. **Deep Ensemble:** five independently trained networks whose predictions are averaged.
-4. **Temperature scaling:** one learned temperature, fit on the validation set, that recalibrates the softmax.
+To explore this question, we train a convolutional neural network (CNN) on chest X-ray images to distinguish between normal cases and pneumonia. We then compare four approaches to predictive uncertainty estimation:
 
-Each method is tested on three kinds of data:
+1. **Softmax Baseline:** Uses the model's maximum softmax probability as a measure of prediction confidence.
+2. **Monte Carlo (MC) Dropout:** Keeps dropout active during inference, evaluates each image multiple times, and measures uncertainty based on the variation in predictions.
+3. **Deep Ensemble:** Trains five independently initialized networks and combines their predictions through averaging.
+4. **Temperature Scaling:** Learns a single temperature parameter using the validation set to recalibrate the model's softmax probabilities.
 
-- the clean chest X-ray test set,
-- the same test images with noise, blur, and reduced contrast at increasing severity,
-- out-of-distribution images (breast ultrasound and retinal scans) that the model never saw in training.
+Each approach is evaluated across three data conditions:
 
-We will report accuracy, Expected Calibration Error (ECE), negative log-likelihood (NLL), Brier score, AUROC for detecting out-of-distribution images, and accuracy versus coverage when the model abstains on its most uncertain cases. The final demo takes a single image and returns a prediction, an uncertainty score, and a "refer for review" flag.
+- **Clean test data:** The original chest X-ray test set.
+- **Corrupted test data:** The same test images subjected to noise, blur, and reduced contrast at increasing severity levels.
+- **Out-of-distribution (OOD) data:** Breast ultrasound and retinal scans that the model has never encountered during training.
 
-## Team
+The evaluation will include accuracy, Expected Calibration Error (ECE), Negative Log-Likelihood (NLL), Brier score, AUROC for out-of-distribution detection, and accuracy versus coverage when the model abstains from making predictions on its most uncertain cases.
+
+The final demonstration will accept a single medical image and return a predicted class, an uncertainty score, and a flag indicating whether the case should be referred for further clinical review.
+
+## Team Members
 
 | Name | GitHub Username |
 |---|---|
@@ -34,29 +37,30 @@ We will report accuracy, Expected Calibration Error (ECE), negative log-likeliho
 
 ## Datasets
 
-All datasets come from **MedMNIST v2**, a collection of standardized 28x28 medical images. They are free, public, and download automatically through the `medmnist` Python package.
+All datasets used in this project are obtained from **MedMNIST v2**, a collection of standardized 28 × 28 medical images. These datasets are publicly available and can be downloaded automatically using the `medmnist` Python package.
 
-| Dataset | Image type | Classes | Role in this project |
+| Dataset | Image Type | Classes | Role in This Project |
 |---|---|---|---|
-| PneumoniaMNIST | Pediatric chest X-ray | normal, pneumonia | Training, validation, and testing |
-| BreastMNIST | Breast ultrasound | (not used) | Out-of-distribution test set |
-| OCTMNIST | Retinal OCT scan | (not used) | Out-of-distribution test set |
+| PneumoniaMNIST | Pediatric chest X-ray | Normal, Pneumonia | Training, validation, and testing |
+| BreastMNIST | Breast ultrasound | Not used | Out-of-distribution test set |
+| OCTMNIST | Retinal OCT scan | Not used | Out-of-distribution test set |
 
-**MedMNIST (processed versions used in this project)**
+### MedMNIST (Processed Versions Used in This Project)
 
-- Official dataset download (Zenodo): https://doi.org/10.5281/zenodo.10519652
-- Project website: https://medmnist.com/
-- Code and loader: https://github.com/MedMNIST/MedMNIST
-- License: CC BY 4.0
+- **Official dataset download (Zenodo):** [https://doi.org/10.5281/zenodo.10519652](https://doi.org/10.5281/zenodo.10519652)
+- **Project website:** [https://medmnist.com/](https://medmnist.com/)
+- **Source code and data loader:** [https://github.com/MedMNIST/MedMNIST](https://github.com/MedMNIST/MedMNIST)
+- **License:** CC BY 4.0
 
-**Original sources of the images**
+### Original Sources of the Images
 
-- PneumoniaMNIST and OCTMNIST: Kermany, D., Zhang, K., and Goldbaum, M. (2018). *Large Dataset of Labeled Optical Coherence Tomography (OCT) and Chest X-Ray Images.* Mendeley Data. https://data.mendeley.com/datasets/rscbjbr9sj/3
-- BreastMNIST: Al-Dhabyani, W., Gomaa, M., Khaled, H., and Fahmy, A. (2020). *Dataset of breast ultrasound images.* Data in Brief, 28, 104863. https://doi.org/10.1016/j.dib.2019.104863
+- **PneumoniaMNIST and OCTMNIST:** Kermany, D., Zhang, K., and Goldbaum, M. (2018). *Large Dataset of Labeled Optical Coherence Tomography (OCT) and Chest X-Ray Images.* Mendeley Data. [https://data.mendeley.com/datasets/rscbjbr9sj/3](https://data.mendeley.com/datasets/rscbjbr9sj/3)
+
+- **BreastMNIST:** Al-Dhabyani, W., Gomaa, M., Khaled, H., and Fahmy, A. (2020). *Dataset of breast ultrasound images.* Data in Brief, 28, 104863. [https://doi.org/10.1016/j.dib.2019.104863](https://doi.org/10.1016/j.dib.2019.104863)
 
 ## Repository Structure
 
-```
+```text
 .
 ├── README.md
 ├── requirements.txt
@@ -66,36 +70,62 @@ All datasets come from **MedMNIST v2**, a collection of standardized 28x28 medic
 
 ## Current Progress
 
-**Notebook 01: Data exploration and baseline** (`notebooks/01_data_exploration_and_baseline.ipynb`)
+### Notebook 01: Data Exploration and Baseline
 
-- Loads PneumoniaMNIST (train / validation / test) and the BreastMNIST and OCTMNIST test sets.
-- Shows class balance per split and sample images from each dataset.
-- Defines the model: a CNN with three convolution blocks (convolution, batch normalization, ReLU, max pooling, dropout) and a classifier with dropout. Dropout is built in because MC Dropout needs it.
-- Trains the baseline with Adam and cross-entropy, keeping the weights with the best validation accuracy.
-- Reports test accuracy, recall for each class, and a first look at softmax confidence on correct vs. wrong predictions and on never-seen images.
+**File:** `notebooks/01_data_exploration_and_baseline.ipynb`
 
-**Next steps:** MC Dropout, the deep ensemble, temperature scaling, the corrupted test sets, and the full evaluation (ECE, NLL, Brier, OOD AUROC, accuracy vs. coverage, reliability diagrams).
+The initial notebook covers the following stages of the project:
+
+- Loads PneumoniaMNIST training, validation, and test datasets, along with the BreastMNIST and OCTMNIST test sets.
+- Examines class distributions across the dataset splits and visualizes sample images from each dataset.
+- Defines the baseline CNN architecture, consisting of three convolutional blocks with convolution, batch normalization, ReLU activation, max pooling, and dropout layers, followed by a classifier with dropout. Dropout is incorporated into the architecture to support the implementation of MC Dropout.
+- Trains the baseline model using the Adam optimizer and cross-entropy loss, retaining the model weights that achieve the best validation accuracy.
+- Evaluates test accuracy, class-wise recall, and an initial comparison of softmax confidence for correct and incorrect predictions, as well as predictions on previously unseen images.
+
+### Next Steps
+
+The remaining implementation and evaluation stages include:
+
+- Monte Carlo (MC) Dropout.
+- Deep Ensemble implementation.
+- Temperature Scaling.
+- Generation of corrupted test datasets.
+- Comprehensive evaluation using ECE, NLL, Brier score, OOD AUROC, and accuracy versus coverage.
+- Reliability diagram generation.
 
 ## How to Run
 
-The easiest way is Google Colab:
+### Option 1: Google Colab (Recommended)
 
-1. Open the notebook in Colab (File > Open notebook > GitHub, then paste this repository's URL).
-2. Set Runtime > Change runtime type > GPU.
-3. Run all cells. The datasets download automatically on the first run.
+1. Open Google Colab.
+2. Navigate to **File → Open notebook → GitHub** and paste the repository URL.
+3. Select **Runtime → Change runtime type** and choose **GPU**.
+4. Execute all notebook cells. The datasets will be downloaded automatically during the first execution.
 
-To run locally instead:
+### Option 2: Run Locally
+
+Install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Launch Jupyter Notebook:
+
+```bash
 jupyter notebook notebooks/01_data_exploration_and_baseline.ipynb
 ```
 
 ## References
 
-1. Gal, Y. and Ghahramani, Z. (2016). Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning. ICML. https://arxiv.org/abs/1506.02142
-2. Lakshminarayanan, B., Pritzel, A., and Blundell, C. (2017). Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles. NIPS. https://arxiv.org/abs/1612.01474
-3. Guo, C., Pleiss, G., Sun, Y., and Weinberger, K. Q. (2017). On Calibration of Modern Neural Networks. ICML. https://arxiv.org/abs/1706.04599
-4. Ovadia, Y. et al. (2019). Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift. NeurIPS. https://arxiv.org/abs/1906.02530
-5. Hendrycks, D. and Gimpel, K. (2017). A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks. ICLR. https://arxiv.org/abs/1610.02136
-6. Yang, J. et al. (2023). MedMNIST v2: A Large-Scale Lightweight Benchmark for 2D and 3D Biomedical Image Classification. Scientific Data, 10, 41. https://github.com/MedMNIST/MedMNIST
+1. Gal, Y. and Ghahramani, Z. (2016). *Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep Learning.* ICML. [https://arxiv.org/abs/1506.02142](https://arxiv.org/abs/1506.02142)
+
+2. Lakshminarayanan, B., Pritzel, A., and Blundell, C. (2017). *Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles.* NIPS. [https://arxiv.org/abs/1612.01474](https://arxiv.org/abs/1612.01474)
+
+3. Guo, C., Pleiss, G., Sun, Y., and Weinberger, K. Q. (2017). *On Calibration of Modern Neural Networks.* ICML. [https://arxiv.org/abs/1706.04599](https://arxiv.org/abs/1706.04599)
+
+4. Ovadia, Y. et al. (2019). *Can You Trust Your Model's Uncertainty? Evaluating Predictive Uncertainty Under Dataset Shift.* NeurIPS. [https://arxiv.org/abs/1906.02530](https://arxiv.org/abs/1906.02530)
+
+5. Hendrycks, D. and Gimpel, K. (2017). *A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks.* ICLR. [https://arxiv.org/abs/1610.02136](https://arxiv.org/abs/1610.02136)
+
+6. Yang, J. et al. (2023). *MedMNIST v2: A Large-Scale Lightweight Benchmark for 2D and 3D Biomedical Image Classification.* Scientific Data, 10, 41. [https://github.com/MedMNIST/MedMNIST](https://github.com/MedMNIST/MedMNIST)
